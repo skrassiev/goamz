@@ -626,8 +626,7 @@ func (b *Bucket) SignedURL(path string, expires time.Time) string {
 	return b.SignedFullURL(path, expires, "GET", url.Values{}, http.Header{})
 }
 
-// SignedFullURL returns a signed URL that allows anyone holding the URL
-// to retrieve the object at path. The signature is valid until expires.
+// SignedFullURL returns a signed URL for the requested HTTP method and accepts arbitrary HTTP headers and parameters to sign. The URL stays valid until expires.
 func (b *Bucket) SignedFullURL(path string, expires time.Time, method string, params url.Values, headers http.Header) string {
 	req := &request{
 		method:  method,
