@@ -627,6 +627,8 @@ func (b *Bucket) SignedURL(path string, expires time.Time) string {
 }
 
 // SignedFullURL returns a signed URL for the requested HTTP method and accepts arbitrary HTTP headers and parameters to sign. The URL stays valid until expires.
+// Original SignedURL calls now SignedFullURL.
+// This is a DRY modification of forked github.com/mitchellh/goamz/s3/s3.go.
 func (b *Bucket) SignedFullURL(path string, expires time.Time, method string, params url.Values, headers http.Header) string {
 	req := &request{
 		method:  method,
