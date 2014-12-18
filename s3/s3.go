@@ -623,11 +623,22 @@ func (b *Bucket) URL(path string) string {
 // SignedURL returns a signed URL that allows anyone holding the URL
 // to retrieve the object at path. The signature is valid until expires.
 func (b *Bucket) SignedURL(path string, expires time.Time) string {
+	return b.SignedFullURL(path, expires, "GET", url.Values{}, http.Header{})
+}
+
+// SignedFullURL returns a signed URL that allows anyone holding the URL
+// to retrieve the object at path. The signature is valid until expires.
+func (b *Bucket) SignedFullURL(path string, expires time.Time, method string, params url.Values, headers http.Header) string {
 	req := &request{
-		bucket: b.Name,
-		path:   path,
-		params: url.Values{"Expires": {strconv.FormatInt(expires.Unix(), 10)}},
+		method:  method,
+		bucket:  b.Name,
+		path:    path,
+		params:  params,
+		headers: headers,
 	}
+
+	req.params["Expires"] = []string{strconv.FormatInt(expires.Unix(), 10)}
+
 	err := b.S3.prepare(req)
 	if err != nil {
 		panic(err)
